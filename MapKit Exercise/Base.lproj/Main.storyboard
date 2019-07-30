@@ -41,16 +41,32 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J88-AY-PPc">
+                                <rect key="frame" x="357" y="755" width="50" height="45"/>
+                                <color key="backgroundColor" red="0.2937590182" green="0.57613104579999996" blue="0.55137318369999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="UWz-OU-VMC"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="24"/>
+                                <state key="normal" title="GO">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="goButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VFJ-I3-7jg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="jUa-WC-8aM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2Um-Df-NJh"/>
                             <constraint firstItem="qru-hX-daz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="6Rd-nX-d9k"/>
+                            <constraint firstItem="J88-AY-PPc" firstAttribute="leading" secondItem="qru-hX-daz" secondAttribute="trailing" constant="-57" id="9kV-GU-EQf"/>
                             <constraint firstAttribute="trailing" secondItem="qru-hX-daz" secondAttribute="trailing" id="R0Y-w0-cIG"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="qru-hX-daz" secondAttribute="bottom" id="Vjs-29-m6A"/>
                             <constraint firstItem="ds9-AN-Hzo" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-20" id="YDC-lm-rxU"/>
                             <constraint firstItem="qru-hX-daz" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Z5S-Is-UK4"/>
                             <constraint firstItem="ds9-AN-Hzo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hff-mQ-QBN"/>
+                            <constraint firstItem="jUa-WC-8aM" firstAttribute="top" secondItem="J88-AY-PPc" secondAttribute="bottom" constant="12" id="iPV-d6-512"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="jUa-WC-8aM" secondAttribute="bottom" id="k7l-0B-JEJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="jUa-WC-8aM" secondAttribute="trailing" id="ot6-tP-7mn"/>
                         </constraints>

@@ -17,6 +17,9 @@ class MapScreen: UIViewController {
     var previousLocation: CLLocation?
     @IBOutlet weak var addressLabel: UILabel!
     
+    let geoCoder = CLGeocoder()
+    var directionsArray: [MKDirections] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -77,15 +80,59 @@ class MapScreen: UIViewController {
         
         return CLLocation(latitude: latitude, longitude: longitude)
     }
+    
+    func getDirections() {
+        guard let location = locationManager.location?.coordinate else {
+            // Inform user we don't have their locaiton
+            return
+        }
+        let request = createDirectionsRequest(from: location)
+        let directions = MKDirections(request: request)
+        resetMapView(withNew: directions)
+        
+        directions.calculate { [unowned self](response, error) in
+            guard let response = response else { return } // Show response not available in an alert
+            
+            for route in response.routes {
+                let steps = route.steps
+                self.mapView.addOverlay(route.polyline)
+                self.mapView.setVisibleMapRect(route.polyline.boundingMapRect, animated: true)
+            }
+        }
+    }
+    
+    func createDirectionsRequest(from coordinate: CLLocationCoordinate2D) -> MKDirections.Request {
+        let destinationCoordinate       = getCenterLocation(for: mapView).coordinate // center of the mapView
+        let startLocation               = MKPlacemark(coordinate: coordinate)
+        let destination                 = MKPlacemark(coordinate: destinationCoordinate)
+        
+        let request                     = MKDirections.Request()
+        request.source                  = MKMapItem(placemark: startLocation)
+        request.destination             = MKMapItem(placemark: destination)
+        request.transportType           = .automobile
+        request.requestsAlternateRoutes = false
+        
+        return request
+    }
+    
+    func resetMapView(withNew direction: MKDirections) {
+        mapView.removeOverlays(mapView.overlays) // removes the blue thing
+        directionsArray.append(direction)
+        let _ = directionsArray.map {$0.cancel()} //  cancel any pending request if it stuck in the asynchronous block from directions.calculate
+    }
+    
+    @IBAction func goButtonTapped(_ sender: UIButton) {
+        getDirections()
+    }
 }
 
 extension MapScreen: CLLocationManagerDelegate {
-//    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//        guard let location = locations.last else { return }// if location did not change
-//        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-//        let region = MKCoordinateRegion.init(center: center, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
-//        mapView.setRegion(region, animated: true)
-//    }
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }// if location did not change
+        let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        let region = MKCoordinateRegion.init(center: center, latitudinalMeters: regionInMeters, longitudinalMeters: regionInMeters)
+        mapView.setRegion(region, animated: true)
+    }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationAuthorization() // maintenance
@@ -121,5 +168,12 @@ extension MapScreen: MKMapViewDelegate {
                 self.addressLabel.text = "\(streetNumber) \(streetName)"
             }
         }
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay as! MKPolyline)
+        renderer.strokeColor = .blue
+        
+        return renderer
     }
 }
